@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>
+    QuizGen AI – ระบบสร้างข้อสอบอัตโนมัติด้วย AI
+  </title>
+
+  <link
+    rel="stylesheet"
+    href="css/style.css"
+  >
+
+  <link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+  >
+
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  >
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+</head>
+
+
+<body>
+
+<div class="container">
+
+
+  <!-- =====================================
+       HEADER
+       ===================================== -->
+
+  <header class="header">
+
+    <div class="logo-area">
+
+      <h1>
+        QuizGen AI
+      </h1>
+
+      <span class="badge">
+        Mini Project
+      </span>
+
+    </div>
+
+    <p class="subtitle">
+      ระบบสร้างข้อสอบอัตโนมัติ
+      วิเคราะห์จุดอ่อน
+      และปรับแบบทดสอบด้วย AI
+    </p>
+
+  </header>
+
+
+
+  <!-- =====================================
+       MAIN
+       ===================================== -->
+
+  <main class="main-card">
+
+
+    <!-- =====================================
+         INPUT FORM
+         ===================================== -->
+
+    <section class="form-section">
+
+      <div class="section-title">
+
+        <h2>
+          📚 สร้างแบบทดสอบ
+        </h2>
+
+        <p>
+          ใส่เนื้อหาบทเรียนและกำหนดรูปแบบข้อสอบ
+        </p>
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label for="lesson-content">
+
+          เนื้อหาบทเรียนภาษาไทย
+
+          <span class="required">
+            *
+          </span>
+
+        </label>
+
+        <textarea
+          id="lesson-content"
+          rows="8"
+          placeholder="วางเนื้อหาบทเรียนที่ต้องการให้ออกข้อสอบที่นี่..."
+        ></textarea>
+
+      </div>
+
+
+      <div class="form-grid">
+
+
+        <div class="form-group">
+
+          <label for="question-count">
+            จำนวนข้อ
+          </label>
+
+          <select id="question-count">
+
+            <option value="5" selected>
+              5 ข้อ
+            </option>
+
+            <option value="10">
+              10 ข้อ
+            </option>
+
+            <option value="15">
+              15 ข้อ
+            </option>
+
+            <option value="20">
+              20 ข้อ
+            </option>
+
+          </select>
+
+        </div>
+
+
+
+        <div class="form-group">
+
+          <label for="question-type">
+            ประเภทข้อสอบ
+          </label>
+
+          <select id="question-type">
+
+            <option
+              value="multiple-choice"
+              selected
+            >
+              ปรนัย 4 ตัวเลือก
+            </option>
+
+            <option value="true-false">
+              ถูก / ผิด
+            </option>
+
+            <option value="short-answer">
+              ตอบคำถามสั้น
+            </option>
+
+          </select>
+
+        </div>
+
+
+
+        <div class="form-group">
+
+          <label for="difficulty-level">
+            ระดับความยาก
+          </label>
+
+          <select id="difficulty-level">
+
+            <option value="easy">
+              ง่าย
+            </option>
+
+            <option
+              value="medium"
+              selected
+            >
+              ปานกลาง
+            </option>
+
+            <option value="hard">
+              ยาก
+            </option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+
+
+      <div class="action-area">
+
+        <button
+          id="btn-generate"
+          class="btn-primary"
+          type="button"
+        >
+
+          <span id="btn-text">
+            ✨ สร้างข้อสอบ
+          </span>
+
+          <span
+            id="btn-spinner"
+            class="spinner hidden"
+          ></span>
+
+        </button>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =====================================
+         ERROR
+         ===================================== -->
+
+    <div
+      id="error-box"
+      class="alert-box alert-error hidden"
+    >
+
+      <span class="alert-icon">
+        ⚠️
+      </span>
+
+      <span id="error-message">
+        เกิดข้อผิดพลาด
+      </span>
+
+    </div>
+
+
+
+    <!-- =====================================
+         QUIZ
+         ===================================== -->
+
+    <section
+      id="quiz-section"
+      class="quiz-section hidden"
+    >
+
+
+      <div class="quiz-header">
+
+        <div>
+
+          <h2 id="quiz-title">
+            📝 แบบทดสอบ
+          </h2>
+
+          <p
+            id="quiz-mode-text"
+            class="quiz-mode-text"
+          >
+            แบบทดสอบจากเนื้อหาบทเรียน
+          </p>
+
+        </div>
+
+
+        <span
+          id="quiz-badge"
+          class="badge-quiz"
+        >
+          0 ข้อ
+        </span>
+
+      </div>
+
+
+
+      <!-- PROGRESS -->
+
+      <div
+        id="quiz-progress"
+        class="quiz-progress"
+      >
+
+        <div class="progress-info">
+
+          <span>
+            ความคืบหน้า
+          </span>
+
+          <span id="progress-text">
+            0 / 0 ข้อ
+          </span>
+
+        </div>
+
+
+        <div class="progress-bar">
+
+          <div
+            id="progress-fill"
+            class="progress-fill"
+            style="width: 0%"
+          ></div>
+
+        </div>
+
+      </div>
+
+
+
+      <div
+        id="questions-container"
+        class="questions-container"
+      ></div>
+
+
+
+      <div
+        id="quiz-action-area"
+        class="quiz-action-area"
+      >
+
+        <button
+          id="btn-submit-quiz"
+          class="btn-success"
+          type="button"
+        >
+          ✅ ส่งคำตอบ
+        </button>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =====================================
+         SCORE
+         ===================================== -->
+
+    <section
+      id="score-section"
+      class="score-section hidden"
+    >
+
+      <div class="score-card">
+
+
+        <div class="score-header">
+
+          <h3>
+            📊 ผลการทดสอบของคุณ
+          </h3>
+
+        </div>
+
+
+        <div class="score-body">
+
+
+          <div class="score-main">
+
+            <span class="score-label">
+              คะแนนที่ได้
+            </span>
+
+            <div class="score-numbers">
+
+              <span
+                id="score-user"
+                class="score-highlight"
+              >
+                0
+              </span>
+
+              <span class="score-total">
+                /
+                <span id="score-max">
+                  0
+                </span>
+              </span>
+
+            </div>
+
+          </div>
+
+
+
+          <div class="score-percentage-box">
+
+            <span class="score-label">
+              คิดเป็น
+            </span>
+
+            <span
+              id="score-percentage"
+              class="score-percentage"
+            >
+              0%
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div
+          id="score-feedback"
+          class="score-feedback"
+        ></div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =====================================
+         LEARNING DASHBOARD
+         ===================================== -->
+
+    <section
+      id="learning-dashboard"
+      class="learning-dashboard hidden"
+    >
+
+      <div class="dashboard-header">
+
+        <div>
+
+          <h2>
+            📈 Learning Dashboard
+          </h2>
+
+          <p>
+            สรุปพัฒนาการจากการทำแบบทดสอบ
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div
+        id="dashboard-content"
+        class="dashboard-content"
+      ></div>
+
+    </section>
+
+
+  </main>
+
+
+
+  <!-- =====================================
+       FOOTER
+       ===================================== -->
+
+  <footer class="footer">
+
+    <p>
+      © 2026 QuizGen AI -
+      พัฒนาขึ้นเพื่อการศึกษา
+      (Mini Project)
+    </p>
+
+  </footer>
+
+
+</div>
+
+
+<script src="js/app.js"></script>
+
+</body>
+</html>
